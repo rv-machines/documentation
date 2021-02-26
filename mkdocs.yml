@@ -1,1 +1,4 @@
 site_name: RISC-V Documentation at RV-MACHINES
+theme:
+    name: readthedocs
+    highlightjs: true
