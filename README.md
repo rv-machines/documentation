@@ -1,5 +1,11 @@
 # RISC-V Documentation at RV-MACHINES
 
+[![Documentation Status](https://readthedocs.org/projects/risc-v-machines/badge/?version=latest)](https://risc-v-machines.readthedocs.io/en/latest/?badge=latest)
+
+URLs :
+ * [risc-v-machines.readthedocs.io](https://risc-v-machines.readthedocs.io/)
+ * [risc-v-machines.rtfd.io](risc-v-machines.rtfd.io)
+
 ## Introduction
 
 This is the repository for the documentation available at [RISC-V Machines @ RTFD](http://risc-v-machines.rtfd.io/), a project that aims to serve documentation regarding the `RISC-V` architecture applied to containers and especially `Kubernetes`.
