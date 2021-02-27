@@ -139,6 +139,17 @@ make linux -j $(nproc)
 
 If you list `/opt/riscv/bin`, you should see an executable file of the name `riscv64-unknown-linux-gnu-gcc`.
 
+Add `/opt/riscv/bin` to your `PATH`. For example :
+
+``` bash
+nano ~/.bash_profile
+
+# User specific environment and startup programs
+PATH=$PATH:/opt/riscv/bin
+```
+
+#### Side notes
+
 You can change the prefix by passing the `--prefix=$RISCV` option at the configuration stage :
 
 ``` bash
@@ -147,7 +158,7 @@ You can change the prefix by passing the `--prefix=$RISCV` option at the configu
 
 ## Busybox
 
-But what is `Busybox` ?
+What is `Busybox` ?
 
 To put in a nutshell : 
 
@@ -286,4 +297,22 @@ Actually create the initramfs :
 
 ``` bash
 find . -print0 | cpio --null -ov --format=newc | gzip -9 > initramfs.cpio.gz
+```
+
+## Runtime
+
+Everything is ready ! Start the virtual machine from the main working directory with :
+
+``` bash
+qemu-system-riscv64 -nographic -machine virt \
+  -kernel linux/arch/riscv/boot/Image \
+  -initrd initramfs/initramfs.cpio.gz \
+  -append "console=ttyS0"
+```
+
+At this stage, you must have an interactive shell ready :
+
+``` bash
+/ # uname -a
+Linux (none) 5.11.0 #1 SMP Sun Feb 21 14:07:39 CET 2021 riscv64 GNU/Linux
 ```
