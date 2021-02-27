@@ -147,4 +147,143 @@ You can change the prefix by passing the `--prefix=$RISCV` option at the configu
 
 ## Busybox
 
-TBD
+But what is `Busybox` ?
+
+To put in a nutshell : 
+
+> BusyBox is a software suite that provides several Unix utilities in a single executable file.
+
+From : [BusyBox - Wikipedia](https://en.wikipedia.org/wiki/BusyBox)
+
+`Busybox` will be our *shell* in order to interact with the operating system.
+
+### Pull 
+
+``` bash
+git clone https://git.busybox.net/busybox
+cd busybox
+git checkout 1_32_1
+```
+
+### Configure
+
+We configure the build with default settings.
+
+``` bash
+make ARCH=riscv CROSS_COMPILE=riscv64-unknown-linux-gnu- defconfig
+```
+
+In order to simplify this guide, we will build `Busybox` with *static linking*. In order to do so, execute the following command :
+
+``` bash
+make ARCH=riscv CROSS_COMPILE=riscv64-unknown-linux-gnu- menuconfig
+```
+
+Then, in the graphical interface, select with ++space++ :
+```
+Busybox Settings --->
+Build Options --->
+Build BusyBox as a static binary (no shared libs) ---> yes
+```
+
+Press ++esc++ ++esc++, finally save the configuration (`.config`)
+
+
+### Compile
+
+``` bash
+make ARCH=riscv CROSS_COMPILE=riscv64-unknown-linux-gnu- -j $(nproc)
+```
+
+## INITRAMFS
+
+Your `Linux` requires a *file system* in order to properly run. So we will prepare the file structure and the `init` script.
+
+``` bash
+mkdir initramfs
+cd initramfs
+mkdir -p {bin,sbin,dev,etc,home,mnt,proc,sys,usr,tmp}
+mkdir -p usr/{bin,sbin}
+mkdir -p proc/sys/kernel
+cd dev
+sudo mknod sda b 8 0 
+sudo mknod console c 5 1
+cd ..
+```
+
+### Busybox
+
+Drop the `busybox` executable from the previous section into the filesystem :
+
+``` bash
+cp ../busybox/busybox ./bin/
+```
+
+### INIT
+
+After the kernel has started, we have to start `Busybox` and finalize the system initialization. We will use a script called `init` that will do the hard work.
+
+``` bash
+nano init
+```
+
+Put the following content into it :
+
+``` bash
+#!/bin/busybox sh
+
+# Make symlinks
+/bin/busybox --install -s
+
+# Mount system
+mount -t devtmpfs  devtmpfs  /dev
+mount -t proc      proc      /proc
+mount -t sysfs     sysfs     /sys
+mount -t tmpfs     tmpfs     /tmp
+
+# Busybox TTY fix
+setsid cttyhack sh
+
+# https://git.busybox.net/busybox/tree/docs/mdev.txt?h=1_32_stable
+echo /sbin/mdev > /proc/sys/kernel/hotplug
+mdev -s
+
+sh
+```
+
+Add executable flag :
+
+``` bash
+chmod +x init
+```
+
+At this stage, your initramfs should look like :
+
+``` bash
+[nikita@localhost initramfs]$ tree
+.
+├── bin
+│   └── busybox
+├── dev
+│   ├── console
+│   └── sda
+├── etc
+├── home
+├── init
+├── mnt
+├── proc
+│   └── sys
+│       └── kernel
+├── sbin
+├── sys
+├── tmp
+└── usr
+    ├── bin
+    └── sbin
+```
+
+Actually create the initramfs :
+
+``` bash
+find . -print0 | cpio --null -ov --format=newc | gzip -9 > initramfs.cpio.gz
+```
