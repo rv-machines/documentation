@@ -20,11 +20,11 @@ This guide has been tested on `Fedora 33` in February 2021.
 
 We can easily compile `Linux` using a ready-to-go *toolchain* provided by your distro :
 
-```RHEL/Fedora
+``` RHEL/Fedora
 sudo dnf install gcc-riscv64-linux-gnu
 ```
 
-```Debian/Ubuntu
+``` Debian/Ubuntu
 sudo apt-get install gcc-riscv64-linux-gnu
 ```
 
@@ -37,13 +37,13 @@ the number of packages.
 
 Let's fetch `Linux` from *Linus Torvald's* repository [torvalds/linux](https://github.com/torvalds/linux) :
 
-```RHEL/Fedora
+``` RHEL/Fedora
 git clone https://github.com/torvalds/linux.git
 ```
 
 Now fetch the last stable revision :
 
-```RHEL/Fedora
+``` RHEL/Fedora
 git checkout v5.11 # as of February 2021
 ```
 
@@ -51,13 +51,13 @@ git checkout v5.11 # as of February 2021
 
 In order to find the **prefix** of your installed toolchain from the command above, you can use :
 
-```RHEL/Fedora
+``` RHEL/Fedora
 PREFIX=$(rpm -ql gcc-riscv64-linux-gnu | grep "lib/gcc" | cut -d'/' -f5 | head -n1)
 ```
 
 Let's use the default configuration by issuing :
 
-```RHEL/Fedora
+``` RHEL/Fedora
 make ARCH=riscv CROSS_COMPILE=${PREFIX}- defconfig
 ```
 
@@ -65,7 +65,7 @@ make ARCH=riscv CROSS_COMPILE=${PREFIX}- defconfig
 
 Now is the time to bench your CPU by actually compiling `Linux` !
 
-```RHEL/Fedora
+``` RHEL/Fedora
 make ARCH=riscv CROSS_COMPILE=${PREFIX}- -j $(nproc)
 ```
 
@@ -85,7 +85,7 @@ We will use `Qemu` for launching `Linux` on our `X86_64` hardware. This is ideal
 
 Instead of building it from scratch, we can simply use the one provided by your distro.
 
-```RHEL/Fedora
+``` RHEL/Fedora
 $ sudo dnf install qemu-system-riscv
 ```
 
@@ -99,17 +99,17 @@ This part is heavily inspired by the [README from the RISC-V GNU Compiler Toolch
 
 ### Pull
 
-```RHEL/Fedora
+``` RHEL/Fedora
 git clone --recursive https://github.com/riscv/riscv-gnu-toolchain
 ```
 
 ### Install requirements
 
-```RHEL/Fedora
+``` RHEL/Fedora
 $ sudo dnf install ncurses-devel ncurses autoconf automake python3 libmpc-devel mpfr-devel gmp-devel gawk bison flex texinfo patchutils gcc gcc-c++ zlib-devel expat-devel
 ```
 
-```Debian/Ubuntu
+``` Debian/Ubuntu
 $ sudo dnf install ncurses-devel ncurses autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
 ```
 
@@ -117,7 +117,7 @@ $ sudo dnf install ncurses-devel ncurses autoconf automake autotools-dev curl py
 
 The command below will compile the toolchain and install the artifacts in `/opt/riscv`.
 
-```RHEL/Fedora
+``` RHEL/Fedora
 cd riscv-gnu-toolchain
 ./configure --prefix=/opt/riscv
 make linux -j $(nproc)
