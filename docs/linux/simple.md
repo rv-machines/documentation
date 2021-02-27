@@ -20,13 +20,15 @@ This guide has been tested on `Fedora 33` in February 2021.
 
 We can easily compile `Linux` using a ready-to-go *toolchain* provided by your distro :
 
-``` RHEL
-sudo dnf install gcc-riscv64-linux-gnu
-```
+=== "RHEL"
+    ``` bash
+    sudo dnf install gcc-riscv64-linux-gnu
+    ```
 
-``` Debian
-sudo apt-get install gcc-riscv64-linux-gnu
-```
+=== "Debian"
+    ``` bash
+    sudo apt-get install gcc-riscv64-linux-gnu
+    ```
 
 > Cross-build GNU C compiler.
 Only building kernels is currently supported.  Support for cross-building
@@ -37,13 +39,13 @@ the number of packages.
 
 Let's fetch `Linux` from *Linus Torvald's* repository [torvalds/linux](https://github.com/torvalds/linux) :
 
-``` RHEL
+``` bash
 git clone https://github.com/torvalds/linux.git
 ```
 
 Now fetch the last stable revision :
 
-``` RHEL
+``` bash
 git checkout v5.11 # as of February 2021
 ```
 
@@ -51,13 +53,13 @@ git checkout v5.11 # as of February 2021
 
 In order to find the **prefix** of your installed toolchain from the command above, you can use :
 
-``` RHEL
+``` bash
 PREFIX=$(rpm -ql gcc-riscv64-linux-gnu | grep "lib/gcc" | cut -d'/' -f5 | head -n1)
 ```
 
 Let's use the default configuration by issuing :
 
-``` RHEL
+``` bash
 make ARCH=riscv CROSS_COMPILE=${PREFIX}- defconfig
 ```
 
@@ -65,7 +67,7 @@ make ARCH=riscv CROSS_COMPILE=${PREFIX}- defconfig
 
 Now is the time to bench your CPU by actually compiling `Linux` !
 
-``` RHEL
+``` bash
 make ARCH=riscv CROSS_COMPILE=${PREFIX}- -j $(nproc)
 ```
 
@@ -85,9 +87,17 @@ We will use `Qemu` for launching `Linux` on our `X86_64` hardware. This is ideal
 
 Instead of building it from scratch, we can simply use the one provided by your distro.
 
-``` RHEL
-$ sudo dnf install qemu-system-riscv
-```
+=== "RHEL"
+
+    ``` bash
+    $ sudo dnf install qemu-system-riscv
+    ```
+
+=== "Debian"
+
+    ``` bash
+    $
+    ```
 
 ## Toolchain
 
@@ -99,25 +109,29 @@ This part is heavily inspired by the [README from the RISC-V GNU Compiler Toolch
 
 ### Pull
 
-``` RHEL
+``` bash
 git clone --recursive https://github.com/riscv/riscv-gnu-toolchain
 ```
 
 ### Install requirements
 
-``` RHEL
-$ sudo dnf install ncurses-devel ncurses autoconf automake python3 libmpc-devel mpfr-devel gmp-devel gawk bison flex texinfo patchutils gcc gcc-c++ zlib-devel expat-devel
-```
+=== "RHEL"
 
-``` Debian
-$ sudo dnf install ncurses-devel ncurses autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
-```
+    ``` bash
+    $ sudo dnf install ncurses-devel ncurses autoconf automake python3 libmpc-devel mpfr-devel gmp-devel gawk bison flex texinfo patchutils gcc gcc-c++ zlib-devel expat-devel
+    ```
+
+=== "Debian"
+
+    ``` bash
+    $ sudo dnf install ncurses-devel ncurses autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
+    ```
 
 ### Configure and Install
 
 The command below will compile the toolchain and install the artifacts in `/opt/riscv`.
 
-``` RHEL
+``` bash
 cd riscv-gnu-toolchain
 ./configure --prefix=/opt/riscv
 make linux -j $(nproc)
@@ -127,7 +141,7 @@ If you list `/opt/riscv/bin`, you should see an executable file of the name `ris
 
 You can change the prefix by passing the `--prefix=$RISCV` option at the configuration stage :
 
-```
+``` bash
 ./configure --prefix=$RISCV
 ```
 

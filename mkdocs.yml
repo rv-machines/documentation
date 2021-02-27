@@ -12,8 +12,10 @@ nav:
 nav_style: dark
 
 theme:
-    name: readthedocs
+    name: material
     highlightjs: true
 
 markdown_extensions:
-  - markdown_fenced_code_tabs
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tabbed
