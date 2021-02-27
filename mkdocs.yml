@@ -6,6 +6,7 @@ nav:
   - 'Linux':
     - 'Linux on RISC-V using QEMU and BUSYBOX from scratch': 'linux/simple.md'
   - 'About':
+    - 'The Project': 'about.md'
     - 'Authors': 'about.md#authors'
     - 'License': 'about.md#license'
 
@@ -13,6 +14,8 @@ nav_style: dark
 
 theme:
     name: material
+    palette:
+      scheme: slate
     highlightjs: true
 
 markdown_extensions:
