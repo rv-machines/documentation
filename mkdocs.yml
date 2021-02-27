@@ -1,4 +1,12 @@
 site_name: RISC-V MACHINES Documentation
+site_description: Doumentation for YooFab™ kits, guides and information on making electronic projects, working with materials, setting up a workshop and more...
+
+nav:
+  - Home: 'index.md'
+  - About: 'about.md'
+
+nav_style: dark
+
 theme:
     name: readthedocs
     highlightjs: true
