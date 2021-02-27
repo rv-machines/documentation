@@ -339,3 +339,5 @@ At this stage, you must have an interactive shell ready :
 / # uname -a
 Linux (none) 5.11.0 #1 SMP Sun Feb 21 14:07:39 CET 2021 riscv64 GNU/Linux
 ```
+
+In order to exit the virtual machine, press ++ctr+a++ then ++x++
