@@ -2,10 +2,12 @@ site_name: RISC-V MACHINES Documentation
 site_description: Guides and information for making Kubernetes, Linux and applications run on RISC-V powered machines.
 
 nav:
-  - Home: index.md
-  - About: about.md
-     - Authors: about.md#authors
-     - License: about.md#license
+  - 'Home': 'index.md'
+  - 'Linux': 'linux.md'
+    - 'Linux on RISC-V using QEMU and BUSYBOX from scratch': 'linux/simple.md'
+  - 'About': 'about.md'
+    - 'Authors': 'about.md#authors'
+    - 'License': 'about.md#license'
 
 nav_style: dark
 
