@@ -14,3 +14,6 @@ nav_style: dark
 theme:
     name: readthedocs
     highlightjs: true
+
+markdown_extensions:
+  - markdown_fenced_code_tabs
