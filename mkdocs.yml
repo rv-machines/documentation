@@ -18,6 +18,13 @@ theme:
       scheme: slate
     highlightjs: true
 
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/rv-machines/documentation
+
+copyright: GPL-3.0 License &#127279; 2021 — Nassim BOUNOUAS & Nikita ROUSSEAU
+
 markdown_extensions:
   - pymdownx.highlight
   - pymdownx.superfences
