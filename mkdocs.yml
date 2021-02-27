@@ -3,9 +3,9 @@ site_description: Guides and information for making Kubernetes, Linux and applic
 
 nav:
   - 'Home': 'index.md'
-  - 'Linux': 'linux.md'
+  - 'Linux':
     - 'Linux on RISC-V using QEMU and BUSYBOX from scratch': 'linux/simple.md'
-  - 'About': 'about.md'
+  - 'About':
     - 'Authors': 'about.md#authors'
     - 'License': 'about.md#license'
 
