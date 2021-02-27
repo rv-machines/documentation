@@ -1,9 +1,11 @@
 site_name: RISC-V MACHINES Documentation
-site_description: Doumentation for YooFab™ kits, guides and information on making electronic projects, working with materials, setting up a workshop and more...
+site_description: Guides and information for making Kubernetes, Linux and applications run on RISC-V powered machines.
 
 nav:
-  - Home: 'index.md'
-  - About: 'about.md'
+  - Home: index.md
+  - About: about.md
+     - Authors: about.md#authors
+     - License: about.md#license
 
 nav_style: dark
 
