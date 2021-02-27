@@ -12,10 +12,11 @@ For details about RISC-V itself, see the [RISC-V Website](https://riscv.org) and
 
 The Guide is built using [MkDocs](https://www.mkdocs.org/).
 
-`MkDocs` can be installed with `pip`, the Python package manager:
+`MkDocs` and project requirements can be installed using `pip` :
 
 ```bash
 pip install mkdocs
+pip install -r requirements.txt
 ```
 > for detailed instructions, see [MkDocs User Guide](https://www.mkdocs.org/user-guide/writing-your-docs/>)
 
