@@ -10,6 +10,6 @@ A long journey of `Kubernetes` on `RISC-V` machines.
 
  * [Linux on RISC-V using QEMU and BUSYBOX from scratch](linux/simple.md)
 
-## Fedora
+## Fedora Core OS
 
- * TBD
+ * [Fedora Core OS on RISC-V](linux/core-os.md)

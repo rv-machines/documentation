@@ -341,3 +341,12 @@ Linux (none) 5.11.0 #1 SMP Sun Feb 21 14:07:39 CET 2021 riscv64 GNU/Linux
 ```
 
 In order to exit the virtual machine, press ++ctrl+a++ then ++x++
+
+## Further reading and related works
+
+This guide has been created and inspired by the following articles and blog posts :
+
+ * [RISC-V - Getting Started Guide](https://risc-v-getting-started-guide.readthedocs.io/en/latest/linux-qemu.html)
+ * [Linux & Python on RISC-V using QEMU from scratch by Vysakh P Pillai](https://embeddedinn.xyz/articles/tutorial/Linux-Python-on-RISCV-using-QEMU-from-scratch/)
+ * [riscv-simulator](https://www.francisz.cn/2020/07/22/riscv-simulator/)
+ * [Building a minimal RootFS with Busybox, GLIBC and DropBear](https://wiki.beyondlogic.org/index.php?title=Cross_Compiling_BusyBox_for_ARM)

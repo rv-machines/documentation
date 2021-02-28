@@ -5,6 +5,7 @@ nav:
   - 'Home': 'index.md'
   - 'Linux':
     - 'Linux on RISC-V using QEMU and BUSYBOX from scratch': 'linux/simple.md'
+    - 'Fedora Core OS on RISC-V' : 'linux/core-os.md'
   - 'About':
     - 'The Project': 'about.md'
     - 'Authors': 'about.md#authors'
