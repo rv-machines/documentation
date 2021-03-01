@@ -4,7 +4,7 @@
 
 URLs :
  * [risc-v-machines.readthedocs.io](https://risc-v-machines.readthedocs.io/)
- * [risc-v-machines.rtfd.io](risc-v-machines.rtfd.io)
+ * [risc-v-machines.rtfd.io](https://risc-v-machines.rtfd.io/)
 
 ## Introduction
 
