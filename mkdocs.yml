@@ -24,7 +24,7 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/rv-machines/documentation
 
-copyright: GPL-3.0 License (ɔ) 2021 — Nassim BOUNOUAS & Nikita ROUSSEAU
+copyright: GPL-3.0 License (ɔ) 2021 — <a href="https://github.com/NassimBounouas">Nassim BOUNOUAS</a> & <a href="https://github.com/nirousseau">Nikita ROUSSEAU</a>
 
 markdown_extensions:
   - pymdownx.highlight
