@@ -24,7 +24,7 @@ The Guide is built using [MkDocs](https://www.mkdocs.org/).
 pip install mkdocs
 pip install -r requirements.txt
 ```
-> for detailed instructions, see [MkDocs User Guide](https://www.mkdocs.org/user-guide/writing-your-docs/>)
+> for detailed instructions, see [MkDocs User Guide](https://www.mkdocs.org/user-guide/writing-your-docs/)
 
 To compile the HTML version of the Guide, use::
 
