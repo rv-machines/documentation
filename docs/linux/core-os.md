@@ -6,8 +6,6 @@ This guide will show you the steps of building your own `Fedora Core OS` derivat
 
 ## Introduction
 
-In the guide [Linux on RISC-V using QEMU and BUSYBOX from scratch](linux/simple.md), we have been able to create a minimal, bootable, `Linux`. However, it lacks a lot a feature because of it is inner simplicity. In order to run `Kubernetes` on `RISC-V`, we will use the `Fedora Core OS` Linux distribution, a minimal operating system for running containerized workloads securely and at scale.
-
 Through this guide, we will build our own `Fedora Core OS` tailored for `RISC-V`.
 
 ## TBD
