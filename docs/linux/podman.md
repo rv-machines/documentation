@@ -16,6 +16,41 @@ The `Fedora Core OS` can be build using *COSA* (CoreOS Assembler). It is a colle
 
 First, we will prepare a `Fedora 33` virtual machine that will run over QEMU on the RISCV64 architecture. This virtual machine will be our host for building `Fedora Core OS` and its dependencies.
 
+### Build golang 1.16.x from source for RISC-V from X86
+
+Install `golang` and build the last revision for `RISC-V`
+
+``` bash
+dnf install golang
+
+# Switch to root
+sudo su
+cd /root
+
+# Override go path
+export GOPATH=~/go
+export PATH=$GOPATH/bin:$PATH
+
+git clone https://go.googlesource.com/go
+
+cd go
+git checkout tags/go1.16.2
+# Note: switching to 'tags/go1.16.2'.
+
+cd src/
+export GOOS=linux
+export GOARCH=riscv64
+bash -x ./make.bash -v
+```
+
+#### Make a simple package
+
+From the `go` directory, make an archive of the compilation artifacts :
+
+``` bash
+tar -czvf golang-16_2-bin-riscv64.tar.gz ./bin/linux_riscv64 ./pkg/tool/linux_riscv64 ./pkg/linux_riscv64 ./pkg/include ./src
+```
+
 ### Install Requirements
 
 **WARNING** : the QEMU VM requires 100GB of free space on your filesystem.
@@ -214,9 +249,76 @@ Update the system
 dnf update && dnf upgrade --best
 ```
 
+#### golang 1.16.x
+
+From the X86 host, from the folder containing the archive `golang-16_2-bin-riscv64.tar.gz` previously created :
+
+``` bash
+python3 -m http.server
+```
+
+Download to your QEMU `riscv64` powered host the file with `wget`, and unpack it to `out` directory :
+
+``` bash
+cd /root
+wget http://X86_HOST:8000/golang-16_2-bin-riscv64.tar.gz -O golang-16_2-bin-riscv64.tar.gz
+mkdir out
+tar -zxvf golang-16_2-bin-riscv64.tar.gz -C out
+```
+
+**WIP**
+
 #### ostree
 
+> https://ostree.readthedocs.io/en/stable/contributing-tutorial/
+
+Install Build Dependencies :
+
+``` bash
+dnf install @buildsys-build dnf-plugins-core && dnf builddep ostree
+```
+
+Fetch `ostree` with the last stable version :
+
+``` bash
+git clone https://github.com/ostreedev/ostree.git
+cd ostree/
+git checkout tags/v2020.8
+git submodule update --init
+```
+
+Configure, make and install `ostree` :
+
+``` bash
+env NOCONFIGURE=1 ./autogen.sh
+./configure
+make -j $(nproc)
+make install
+```
+
 #### rclone
+
+Fetch `rclone` with the last stable version :
+
+``` bash
+git clone https://github.com/rclone/rclone.git
+cd rclone
+git checkout tags/v1.54.0
+```
+
+Patch dependency error [RISC-V support](https://github.com/ipfs/go-ipfs/issues/7781)
+
+``` bash
+go mod edit -replace=github.com/prometheus/procfs=github.com/prometheus/procfs@910e685
+```
+
+Build, check version and copy artifact to `/usr/bin`
+
+``` bash
+go build
+./rclone version
+cp rclone /usr/bin/
+```
 
 #### podman
 
