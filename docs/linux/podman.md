@@ -16,9 +16,9 @@ The `Fedora Core OS` can be build using *COSA* (CoreOS Assembler). It is a colle
 
 First, we will prepare a `Fedora 33` virtual machine that will run over QEMU on the RISCV64 architecture. This virtual machine will be our host for building `Fedora Core OS` and its dependencies.
 
-### Build golang 1.16.x from source for RISC-V from X86
+### Cross-compile golang 1.16.x from source targeting RISC-V from X86
 
-Install `golang` and build the last revision for `RISC-V`
+*From your X86 host*, install `golang` (revision > 1.14) and build the last revision for `RISC-V`
 
 ``` bash
 dnf install golang
@@ -42,6 +42,9 @@ export GOOS=linux
 export GOARCH=riscv64
 bash -x ./make.bash -v
 ```
+
+> [Install GO from source](https://golang.org/doc/install/source)
+> [GO 1.16 RISC-V](https://golang.org/doc/go1.16#riscv)
 
 #### Make a simple package
 
@@ -260,13 +263,38 @@ python3 -m http.server
 Download to your QEMU `riscv64` powered host the file with `wget`, and unpack it to `out` directory :
 
 ``` bash
+sudo su
 cd /root
+
 wget http://X86_HOST:8000/golang-16_2-bin-riscv64.tar.gz -O golang-16_2-bin-riscv64.tar.gz
 mkdir out
 tar -zxvf golang-16_2-bin-riscv64.tar.gz -C out
+
+cd out
+mv ./go/bin/linux_riscv64/* ./go/bin/
 ```
 
-**WIP**
+Add go sources next to the compiled binaries
+
+```
+git clone https://go.googlesource.com/go
+git checkout tags/go1.16.2
+export PATH=~/go/bin:$PATH # Custom binary location
+```
+
+Prepare `golang` workspace
+
+``` bash
+mkdir golang
+export GOPATH=~/golang # WORKSPACE
+```
+
+Verify that it works !
+
+``` bash
+[root@fedora-riscv ~]# go version
+go version go1.16.2 linux/riscv64
+```
 
 #### ostree
 
@@ -321,6 +349,218 @@ cp rclone /usr/bin/
 ```
 
 #### podman
+
+##### runc
+
+``` bash
+git clone https://github.com/opencontainers/runc.git
+cd runc
+git checkout tags/v1.0.0-rc93
+make vendor
+make BUILDTAGS="seccomp"
+```
+
+Verify that it works
+
+``` bash
+[root@fedora-riscv runc]# ./runc --version
+runc version 1.0.0-rc93
+commit: 12644e614e25b05da6fd08a38ffa0cfe1903fdec
+spec: 1.0.2-dev
+go: go1.16.2
+libseccomp: 2.4.1
+```
+
+Install the binary
+
+``` bash
+make install
+```
+
+##### container networking
+
+> https://github.com/containernetworking/plugins/
+
+``` bash
+git clone https://github.com/containernetworking/plugins.git
+cd plugins
+GOOS=linux GOARCH=riscv64 ./build_linux.sh
+
+export CNI_PATH=$PWD/bin
+```
+
+> https://github.com/containernetworking/cni#running-the-plugins
+
+``` bash
+mkdir -p /etc/cni/net.d
+
+cat >/etc/cni/net.d/10-mynet.conf <<EOF
+{
+	"cniVersion": "0.2.0",
+	"name": "mynet",
+	"type": "bridge",
+	"bridge": "cni0",
+	"isGateway": true,
+	"ipMasq": true,
+	"ipam": {
+		"type": "host-local",
+		"subnet": "10.22.0.0/16",
+		"routes": [
+			{ "dst": "0.0.0.0/0" }
+		]
+	}
+}
+EOF
+
+cat >/etc/cni/net.d/99-loopback.conf <<EOF
+{
+	"cniVersion": "0.2.0",
+	"name": "lo",
+	"type": "loopback"
+}
+EOF
+```
+
+> https://github.com/containernetworking/cni
+
+``` bash
+git clone https://github.com/containernetworking/cni.git
+cd cni
+cd scripts
+./priv-net-run.sh ifconfig
+```
+
+Verify :
+
+``` bash
+root@fedora-riscv scripts]# ./priv-net-run.sh ifconfig
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 10.22.0.2  netmask 255.255.0.0  broadcast 10.22.255.255
+        inet6 fe80::d02e:f7ff:fec2:3ce9  prefixlen 64  scopeid 0x20<link>
+        ether d2:2e:f7:c2:3c:e9  txqueuelen 0  (Ethernet)
+        RX packets 11  bytes 1026 (1.0 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 7  bytes 558 (558.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+```
+
+Configure CNI networking for podman
+
+``` bash
+mkdir -p /etc/containers
+curl -L -o /etc/containers/registries.conf https://raw.githubusercontent.com/projectatomic/registries/master/registries.fedora
+curl -L -o /etc/containers/policy.json https://raw.githubusercontent.com/containers/skopeo/master/default-policy.json
+
+mkdir -p /opt/cni/bin
+mv plugins/bin* /opt/cni/bin/
+```
+
+##### containers-common
+
+``` bash
+git clone https://github.com/containers/common.git
+cd common
+make vendor
+GOOS=linux GOARCH=riscv64 go build -tags "seccomp" ./...  # make BUILDTAGS="seccomp"
+make install
+```
+
+##### Podman
+
+``` bash
+git clone https://github.com/containers/podman.git
+cd podman
+git checkout tags/v3.0.1
+make BUILDTAGS="selinux seccomp systemd"
+make install
+```
+
+Verify that podman is correctly set-up
+
+```
+podman --version
+```
+
+> podman version 3.0.1
+
+## Build and run a simple image
+
+> https://mschirbel.medium.com/introduction-to-podman-from-scratch-to-hello-world-b26b126d18d4
+
+``` bash
+mkdir helloworld
+```
+
+Create a simple C application :
+
+nano hello.c
+``` c
+#include <stdio.h>
+
+int main()
+{
+     printf("\nHello from Docker!\nThis message shows that your installation appears to be working correctly.\n\n");
+     return 0;
+}
+```
+
+Compile :
+
+``` bash
+gcc -static hello.c -o hello
+```
+
+Make a Dockerfile : 
+
+```
+FROM scratch
+COPY hello /
+ENTRYPOINT ["/hello"]
+```
+
+Build and run the docker image with podman :
+
+```
+podman build . -t helloworld
+podman run helloworld
+```
+
+## Build and run a simple webapp
+
+``` bash
+podman run -d -p 8080:8080 carlosedp/echo_on_riscv
+```
+
+> ✔ docker.io/carlosedp/echo_on_riscv:latest
+> Trying to pull docker.io/carlosedp/echo_on_riscv:latest...
+> Getting image source signatures
+> …  
+> …  
+> Writing manifest to image destination
+> Storing signatures
+> 3091688cc4a5dbf3e7a5ce07d93ce519bb306a7136eaedd5978b5445a12c6dd4
+
+``` bash
+podman ps
+CONTAINER ID  IMAGE                                     COMMAND  CREATED         STATUS             PORTS                   NAMES
+3091688cc4a5  docker.io/carlosedp/echo_on_riscv:latest           32 seconds ago  Up 17 seconds ago  0.0.0.0:8080->8080/tcp  intelligent_fermat
+```
+
+Query the HTTP server :
+
+``` bash
+[root@fedora-riscv helloworld]# curl http://localhost:8080
+Hello, World! I'm running on linux/riscv64 inside a container!
+```
 
 ## Further reading and related works
 
