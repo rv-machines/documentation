@@ -160,13 +160,13 @@ Device     Boot   Start      End  Sectors  Size Id Type
 /dev/vda2       1007616 17960959 16953344  8.1G 83 Linux
 ```
 
-*d*elete partition...
+`d`elete partition...
 
 ```
 Command (m for help): d
 ```
 
-... number *2*
+... number `2`
 
 ```
 Partition number (1,2, default 2): 2
@@ -174,7 +174,7 @@ Partition number (1,2, default 2): 2
 Partition 2 has been deleted.
 ```
 
-*n*ew partition...
+`n`ew partition...
 
 ```
 Command (m for help): n
@@ -183,13 +183,13 @@ Partition type
    e   extended (container for logical partitions)
 ```
 
-... of type *p*rimary ...
+... of type `p`rimary ...
 
 ```
 Select (default p): p
 ```
 
-... number *2*...
+... number `2`...
 
 ```
 Partition number (2-4, default 2): 2
@@ -210,7 +210,7 @@ Created a new partition 2 of type 'Linux' and of size 88.5 GiB.
 Partition #2 contains a ext4 signature.
 ```
 
-Keep signature
+Keep signature with `N`
 
 ```
 Do you want to remove the signature? [Y]es/[N]o: N
