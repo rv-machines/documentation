@@ -119,7 +119,7 @@ mv Fedora-Developer-Rawhide-20210113.n.0-sda.raw Fedora.raw
 Extend the storage available on the *raw* disk :
 
 ``` bash
-qemu-img resize -f raw Fedora.raw +40G
+qemu-img resize -f raw Fedora.raw +80G
 ```
 
 #### Boot
@@ -241,7 +241,11 @@ Write the changes to the partition table and reboot
 Command (m for help): w
 The partition table has been altered.
 Syncing disks.
+```
 
+Restart the instance
+
+```
 reboot
 ```
 
