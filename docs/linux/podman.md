@@ -122,7 +122,9 @@ Extend the storage available on the *raw* disk :
 qemu-img resize -f raw Fedora.raw +40G
 ```
 
-Boot the virtual machine :
+#### Boot
+
+Boot the virtual machine with :
 
 ``` bash
 qemu-system-riscv64 \
@@ -140,7 +142,7 @@ qemu-system-riscv64 \
    -netdev user,id=usernet,hostfwd=tcp::10000-:22
 ```
 
-Increase partition size :
+#### Increase partition size
 
 ``` bash
 sudo fdisk /dev/vda
