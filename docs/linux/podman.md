@@ -281,7 +281,7 @@ tmpfs           1.6G  8.5M  1.6G   1% /run
 /dev/vda2        88G  5.9G   82G   7% /
 ```
 
-### Install dependencies (ostree rclone podman)
+### Install dependencies (golang ostree rclone podman)
 
 Update the system
 
@@ -335,30 +335,8 @@ go version go1.16.2 linux/riscv64
 
 #### ostree
 
-> https://ostree.readthedocs.io/en/stable/contributing-tutorial/
-
-Install Build Dependencies :
-
 ``` bash
-dnf install @buildsys-build dnf-plugins-core && dnf builddep ostree
-```
-
-Fetch `ostree` with the last stable version :
-
-``` bash
-git clone https://github.com/ostreedev/ostree.git
-cd ostree/
-git checkout tags/v2020.8
-git submodule update --init
-```
-
-Configure, make and install `ostree` :
-
-``` bash
-env NOCONFIGURE=1 ./autogen.sh
-./configure
-make -j $(nproc)
-make install
+dnf install ostree
 ```
 
 #### rclone
@@ -386,6 +364,30 @@ cp rclone /usr/bin/
 ```
 
 #### podman
+
+##### Build and Run Dependencies
+
+> [podman Dependencies](https://podman.io/getting-started/installation#build-and-run-dependencies)
+
+``` bash
+dnf install -y \
+  btrfs-progs-devel \
+  conmon \
+  device-mapper-devel \
+  git \
+  glib2-devel \
+  glibc-devel \
+  glibc-static \
+  golang-github-cpuguy83-md2man \
+  gpgme-devel \
+  iptables \
+  libassuan-devel \
+  libgpg-error-devel \
+  libseccomp-devel \
+  libselinux-devel \
+  make \
+  pkgconfig
+```
 
 ##### runc
 
