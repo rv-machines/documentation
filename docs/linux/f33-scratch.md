@@ -99,5 +99,7 @@ The chroot filesystem can be accessed via : `/var/lib/mock/fedora-rawhide-riscv6
 This guide has been created and inspired by the following articles and blog posts :
  
  * [How to build Fedora container images](https://fedoramagazine.org/how-to-build-fedora-container-images/)
- * [Example x86_64 Official Docker image for Fedora 33](https://github.com/fedora-cloud/docker-brew-fedora/tree/7b9d4b28443845a3e4e4e520a857fa2e9e52fb8e/x86_64)
- * [livemedia-creator](https://weldr.io/lorax/livemedia-creator.html)
+ * [Example - x86_64 Official Docker image for Fedora 33](https://github.com/fedora-cloud/docker-brew-fedora/tree/7b9d4b28443845a3e4e4e520a857fa2e9e52fb8e/x86_64)
+ * [weldr.io - livemedia-creator](https://weldr.io/lorax/livemedia-creator.html)
+ * [Anaconda PKG on RISC-V KOJI](http://fedora.riscv.rocks/koji/buildinfo?buildID=195358)
+ * [Livemedia-creator- How to create and use a Live CD](https://fedoraproject.org/wiki/Livemedia-creator-_How_to_create_and_use_a_Live_CD#livemedia-creator)
