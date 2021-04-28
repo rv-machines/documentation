@@ -310,21 +310,29 @@ mkdir out
 tar -zxvf golang-16_2-bin-riscv64.tar.gz -C out
 
 cd out
-mv ./go/bin/linux_riscv64/* ./go/bin/
+mv ./bin/linux_riscv64/* ./bin/
 ```
 
 Add go sources next to the compiled binaries
 
-```
+``` bash
+# Fetch golang sources
 git clone https://go.googlesource.com/go
+cd go
 git checkout tags/go1.16.2
-export PATH=~/go/bin:$PATH # Custom binary location
+
+# Append compiled artifacts to sources
+cd ..
+cp -rn out/* go/
+
+# Custom binary location
+export PATH=~/go/bin:$PATH
 ```
 
 Prepare `golang` workspace
 
 ``` bash
-mkdir golang
+mkdir -p ~/golang
 export GOPATH=~/golang # WORKSPACE
 ```
 
