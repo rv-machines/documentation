@@ -43,14 +43,16 @@ export GOARCH=riscv64
 bash -x ./make.bash -v
 ```
 
-> [Install GO from source](https://golang.org/doc/install/source)
-> [GO 1.16 RISC-V](https://golang.org/doc/go1.16#riscv)
+More information about building `golang` from source here :
+ * [Install GO from source](https://golang.org/doc/install/source)
+ * [GO 1.16 RISC-V](https://golang.org/doc/go1.16#riscv)
 
 #### Make a simple package
 
 From the `go` directory, make an archive of the compilation artifacts :
 
 ``` bash
+cd ..
 tar -czvf golang-16_2-bin-riscv64.tar.gz ./bin/linux_riscv64 ./pkg/tool/linux_riscv64 ./pkg/linux_riscv64 ./pkg/include ./src
 ```
 
