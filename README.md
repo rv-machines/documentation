@@ -5,6 +5,7 @@
 URLs :
  * [risc-v-machines.readthedocs.io](https://risc-v-machines.readthedocs.io/)
  * [risc-v-machines.rtfd.io](https://risc-v-machines.rtfd.io/)
+ * [Quay.io - risc-v-machines namespace](https://quay.io/repository/nirousseau/risc-v-machines)
 
 ## Introduction
 
