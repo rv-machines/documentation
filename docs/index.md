@@ -10,9 +10,10 @@ A long journey of `Kubernetes` on `RISC-V` machines.
 
  * [Linux on RISC-V using QEMU and BUSYBOX from scratch](linux/simple.md)
 
-## Podman on Fedora 33 for RISCV64
+## Containers for RISCV64
 
  * [Podman for RISC-V](linux/podman.md)
+ * [Fedora 33 Base Image for RISC-V](linux/f33-scratch.md)
 
 ## Fedora Core OS
 
