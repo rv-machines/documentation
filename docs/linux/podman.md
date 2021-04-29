@@ -362,12 +362,14 @@ git checkout tags/v1.54.0
 Patch dependency error [RISC-V support](https://github.com/ipfs/go-ipfs/issues/7781)
 
 ``` bash
+go mod download github.com/prometheus/procfs
 go mod edit -replace=github.com/prometheus/procfs=github.com/prometheus/procfs@910e685
 ```
 
-Build, check version and copy artifact to `/usr/bin`
+Tidy deps, build, check version and copy artifact to `/usr/bin`
 
 ``` bash
+go mod tidy
 go build
 ./rclone version
 cp rclone /usr/bin/
