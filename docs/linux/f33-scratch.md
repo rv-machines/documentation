@@ -92,10 +92,16 @@ The chroot filesystem can be accessed via : `/var/lib/mock/fedora-rawhide-riscv6
 
 ## Building a scratch image
 
-Unpack the rootfs :
+Go to `results` :
 
 ```
-tar -xJvf rootfs_fedora.tar.xz
+cd /home/builder/results/try-1/
+```
+
+Unpack the `rootfs` :
+
+```
+xz -d rootfs_fedora.tar.xz
 ```
 
 Let's create the `Dockerfile` for our fedora container image :
