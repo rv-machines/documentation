@@ -92,7 +92,38 @@ The chroot filesystem can be accessed via : `/var/lib/mock/fedora-rawhide-riscv6
 
 ## Building a scratch image
 
-> WIP
+Unpack the rootfs :
+
+```
+tar -xJvf rootfs_fedora.tar.xz
+```
+
+Let's create the `Dockerfile` for our fedora container image :
+
+``` Dockerfile
+FROM scratch
+ADD rootfs_fedora.tar /
+CMD ["/bin/bash"]
+```
+
+Time to build the image !
+
+``` bash
+podman build -t f33-riscv64 .
+```
+
+Test that it works :
+
+``` bash
+podman run -it --rm f33-riscv64 cat /etc/os-release
+podman run -it --rm --entrypoint="/bin/bash" f33-riscv64
+```
+
+This image has been published on `quay.io`, you can pull and test it :
+
+```
+podman pull <repository>
+```
 
 ## Further reading and related works
 

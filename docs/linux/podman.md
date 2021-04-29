@@ -481,7 +481,7 @@ cd scripts
 ./priv-net-run.sh ifconfig
 ```
 
-Verify :
+Verify that you have a similar output :
 
 ``` bash
 root@fedora-riscv scripts]# ./priv-net-run.sh ifconfig
