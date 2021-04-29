@@ -127,8 +127,19 @@ podman run -it --rm --entrypoint="/bin/bash" f33-riscv64
 
 This image has been published on `quay.io`, you can pull and test it :
 
+``` bash
+# Pull
+podman pull quay.io/nirousseau/f33-riscv64:latest
 ```
-podman pull <repository>
+
+### Publishing to Quay.IO
+
+``` bash
+# Tag
+podman tag f33-riscv64:latest quay.io/nirousseau/f33-riscv64:latest
+
+# Push
+podman push quay.io/nirousseau/f33-riscv64:latest
 ```
 
 ## Further reading and related works
@@ -140,3 +151,4 @@ This guide has been created and inspired by the following articles and blog post
  * [weldr.io - livemedia-creator](https://weldr.io/lorax/livemedia-creator.html)
  * [Anaconda PKG on RISC-V KOJI](http://fedora.riscv.rocks/koji/buildinfo?buildID=195358)
  * [Livemedia-creator- How to create and use a Live CD](https://fedoraproject.org/wiki/Livemedia-creator-_How_to_create_and_use_a_Live_CD#livemedia-creator)
+ * [Getting Started with Quay.io](https://docs.quay.io/solution/getting-started.html)
