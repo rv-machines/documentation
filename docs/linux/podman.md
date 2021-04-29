@@ -512,7 +512,7 @@ curl -L -o /etc/containers/registries.conf https://raw.githubusercontent.com/pro
 curl -L -o /etc/containers/policy.json https://raw.githubusercontent.com/containers/skopeo/master/default-policy.json
 
 mkdir -p /opt/cni/bin
-mv plugins/bin* /opt/cni/bin/
+mv plugins/bin/* /opt/cni/bin/
 ```
 
 ##### containers-common
