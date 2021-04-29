@@ -5,7 +5,8 @@ nav:
   - 'Home': 'index.md'
   - 'Linux':
     - 'Linux on RISC-V using QEMU and BUSYBOX from scratch': 'linux/simple.md'
-    - 'Podman on Fedora 33 for RISCV64' : 'linux/podman.md'
+    - 'Podman for RISCV64' : 'linux/podman.md'
+    - 'Fedora 33 Base Image for RISC-V' : 'linux/f33-scratch.md'
     - 'Fedora Core OS on RISC-V' : 'linux/core-os.md'
   - 'About':
     - 'The Project': 'about.md'
