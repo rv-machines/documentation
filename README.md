@@ -5,6 +5,7 @@
 URLs :
  * [risc-v-machines.readthedocs.io](https://risc-v-machines.readthedocs.io/)
  * [risc-v-machines.rtfd.io](https://risc-v-machines.rtfd.io/)
+ * [![Docker Repository on Quay](https://quay.io/repository/nirousseau/f33-riscv64/status "Docker Repository on Quay")](https://quay.io/repository/nirousseau/f33-riscv64)
 
 ## Introduction
 

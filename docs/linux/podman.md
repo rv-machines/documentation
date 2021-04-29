@@ -43,14 +43,16 @@ export GOARCH=riscv64
 bash -x ./make.bash -v
 ```
 
-> [Install GO from source](https://golang.org/doc/install/source)
-> [GO 1.16 RISC-V](https://golang.org/doc/go1.16#riscv)
+More information about building `golang` from source here :
+ * [Install GO from source](https://golang.org/doc/install/source)
+ * [GO 1.16 RISC-V](https://golang.org/doc/go1.16#riscv)
 
 #### Make a simple package
 
 From the `go` directory, make an archive of the compilation artifacts :
 
 ``` bash
+cd ..
 tar -czvf golang-16_2-bin-riscv64.tar.gz ./bin/linux_riscv64 ./pkg/tool/linux_riscv64 ./pkg/linux_riscv64 ./pkg/include ./src
 ```
 
@@ -281,7 +283,7 @@ tmpfs           1.6G  8.5M  1.6G   1% /run
 /dev/vda2        88G  5.9G   82G   7% /
 ```
 
-### Install dependencies (ostree rclone podman)
+### Install dependencies (golang ostree rclone podman)
 
 Update the system
 
@@ -308,21 +310,29 @@ mkdir out
 tar -zxvf golang-16_2-bin-riscv64.tar.gz -C out
 
 cd out
-mv ./go/bin/linux_riscv64/* ./go/bin/
+mv ./bin/linux_riscv64/* ./bin/
 ```
 
 Add go sources next to the compiled binaries
 
-```
+``` bash
+# Fetch golang sources
 git clone https://go.googlesource.com/go
+cd go
 git checkout tags/go1.16.2
-export PATH=~/go/bin:$PATH # Custom binary location
+
+# Append compiled artifacts to sources
+cd ..
+cp -rn out/* go/
+
+# Custom binary location
+export PATH=~/go/bin:$PATH
 ```
 
 Prepare `golang` workspace
 
 ``` bash
-mkdir golang
+mkdir -p ~/golang
 export GOPATH=~/golang # WORKSPACE
 ```
 
@@ -335,30 +345,8 @@ go version go1.16.2 linux/riscv64
 
 #### ostree
 
-> https://ostree.readthedocs.io/en/stable/contributing-tutorial/
-
-Install Build Dependencies :
-
 ``` bash
-dnf install @buildsys-build dnf-plugins-core && dnf builddep ostree
-```
-
-Fetch `ostree` with the last stable version :
-
-``` bash
-git clone https://github.com/ostreedev/ostree.git
-cd ostree/
-git checkout tags/v2020.8
-git submodule update --init
-```
-
-Configure, make and install `ostree` :
-
-``` bash
-env NOCONFIGURE=1 ./autogen.sh
-./configure
-make -j $(nproc)
-make install
+dnf install ostree
 ```
 
 #### rclone
@@ -374,18 +362,44 @@ git checkout tags/v1.54.0
 Patch dependency error [RISC-V support](https://github.com/ipfs/go-ipfs/issues/7781)
 
 ``` bash
+go mod download github.com/prometheus/procfs
 go mod edit -replace=github.com/prometheus/procfs=github.com/prometheus/procfs@910e685
 ```
 
-Build, check version and copy artifact to `/usr/bin`
+Tidy deps, build, check version and copy artifact to `/usr/bin`
 
 ``` bash
+go mod tidy
 go build
 ./rclone version
 cp rclone /usr/bin/
 ```
 
 #### podman
+
+##### Build and Run Dependencies
+
+> [podman Dependencies](https://podman.io/getting-started/installation#build-and-run-dependencies)
+
+``` bash
+dnf install -y \
+  btrfs-progs-devel \
+  conmon \
+  device-mapper-devel \
+  git \
+  glib2-devel \
+  glibc-devel \
+  glibc-static \
+  golang-github-cpuguy83-md2man \
+  gpgme-devel \
+  iptables \
+  libassuan-devel \
+  libgpg-error-devel \
+  libseccomp-devel \
+  libselinux-devel \
+  make \
+  pkgconfig
+```
 
 ##### runc
 
@@ -467,7 +481,7 @@ cd scripts
 ./priv-net-run.sh ifconfig
 ```
 
-Verify :
+Verify that you have a similar output :
 
 ``` bash
 root@fedora-riscv scripts]# ./priv-net-run.sh ifconfig
@@ -498,7 +512,7 @@ curl -L -o /etc/containers/registries.conf https://raw.githubusercontent.com/pro
 curl -L -o /etc/containers/policy.json https://raw.githubusercontent.com/containers/skopeo/master/default-policy.json
 
 mkdir -p /opt/cni/bin
-mv plugins/bin* /opt/cni/bin/
+mv plugins/bin/* /opt/cni/bin/
 ```
 
 ##### containers-common
