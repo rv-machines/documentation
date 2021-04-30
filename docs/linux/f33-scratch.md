@@ -69,7 +69,7 @@ mkdir ~/results/
 # Init the mock
 mock -r fedora-rawhide-riscv64 --init
 
-# Push Kickstart file and RPMs
+# Push Kickstart file
 mock -r fedora-rawhide-riscv64 --copyin ./fedora-docker.ks /root/
 
 # Install some more packages and anaconda
