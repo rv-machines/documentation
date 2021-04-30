@@ -57,6 +57,12 @@ In order to find the **prefix** of your installed toolchain from the command abo
 PREFIX=$(rpm -ql gcc-riscv64-linux-gnu | grep "lib/gcc" | cut -d'/' -f5 | head -n1)
 ```
 
+The following steps require additional tools :
+
+```bash
+sudo dnf install flex bison
+```
+
 Let's use the default configuration by issuing :
 
 ``` bash
