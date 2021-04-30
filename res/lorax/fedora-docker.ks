@@ -163,7 +163,7 @@ umount /run
 rm /run/nologin # https://pagure.io/atomic-wg/issue/316
 
 # Final pruning
-rm -rfv /var/cache/* /var/log/* /tmp/*
+rm -rfv /var/cache/bpf/* /var/cache/ldconfig/* /var/log/* /tmp/*
 
 %end
 

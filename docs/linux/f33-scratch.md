@@ -122,7 +122,7 @@ Test that it works :
 
 ``` bash
 podman run -it --rm f33-riscv64 cat /etc/os-release
-podman run -it --rm --entrypoint="/bin/bash" f33-riscv64
+podman run --privileged -it --rm --entrypoint="/bin/bash" f33-riscv64
 ```
 
 This image has been published on `quay.io`, you can pull and test it :
