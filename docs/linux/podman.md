@@ -99,9 +99,10 @@ virt-builder --arch riscv64 --notes fedora-rawhide-developer-20200108.n.0 | grep
 ```
 
 > https://dl.fedoraproject.org/pub/alt/risc-v/repo/virt-builder-images/images/Fedora-Developer-Rawhide-20200108.n.0-fw_payload-uboot-qemu-virt-smode.elf
+>
 > https://dl.fedoraproject.org/pub/alt/risc-v/repo/virt-builder-images/images/Fedora-Developer-Rawhide-20200108.n.0-fw_payload-uboot-qemu-virt-smode.elf.CHECKSUM
 
-We will now fetch the last available pre-built image, with the boot payload :
+Since this image is not the latest released, we will now fetch the last available pre-built image, with the boot payload :
 
 ``` bash
 wget http://fedora.riscv.rocks/kojifiles/work/tasks/959/910959/Fedora-Developer-Rawhide-20210113.n.0-sda.raw.zst
@@ -109,6 +110,8 @@ wget https://dl.fedoraproject.org/pub/alt/risc-v/repo/virt-builder-images/images
 ```
 
 > This image comes from an appliance image build produced by `KOJI`, the Fedora build system. You can see other artifacts here : [f33, Fedora-Developer-Rawhide-20210113.n.0, fedora-riscv64-developer-rawhide.ks, riscv64](http://fedora.riscv.rocks/koji/taskinfo?taskID=910959)
+>
+> Note : We are using the latest image with the payload provided by virtual-builder
 
 Install ZSTD archive manager :
 
