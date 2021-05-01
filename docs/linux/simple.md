@@ -163,7 +163,7 @@ The command below will compile the toolchain and install the artifacts in `/opt/
 ``` bash
 cd riscv-gnu-toolchain
 ./configure --prefix=/opt/riscv
-make linux -j $(nproc)
+sudo make linux -j $(nproc)
 ```
 
 If you list `/opt/riscv/bin`, you should see an executable file of the name `riscv64-unknown-linux-gnu-gcc`.

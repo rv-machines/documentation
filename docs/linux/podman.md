@@ -83,10 +83,15 @@ virt-builder --list | grep riscv64
 ```
 
 > fedora-rawhide-developer-20190703n0 riscv64    Fedora® Rawhide Developer 20190703.n.0
+>
 > fedora-rawhide-developer-20191030n0 riscv64    Fedora® Rawhide Developer 20191030.n.0
+>
 > fedora-rawhide-developer-20191123.n.0 riscv64    Fedora® Rawhide Developer 20191123.n.0
+>
 > fedora-rawhide-minimal-20191123.n.1 riscv64    Fedora® Rawhide Minimal 20191123.n.1
+>
 > fedora-rawhide-developer-20200108.n.0 riscv64    Fedora® Rawhide Developer 20200108.n.0
+>
 > fedora-rawhide-minimal-20200108.n.0 riscv64    Fedora® Rawhide Minimal 20200108.n.0
 
 ``` bash
