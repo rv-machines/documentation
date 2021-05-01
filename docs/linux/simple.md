@@ -147,13 +147,13 @@ git clone --recursive https://github.com/riscv/riscv-gnu-toolchain
 === "RHEL"
 
     ``` bash
-    $ sudo dnf install ncurses-devel ncurses autoconf automake python3 libmpc-devel mpfr-devel gmp-devel gawk bison flex texinfo patchutils gcc gcc-c++ zlib-devel expat-devel
+    $ sudo dnf install ncurses-devel ncurses autoconf automake python3 libmpc-devel mpfr-devel gmp-devel gawk texinfo patchutils gcc gcc-c++ zlib-devel expat-devel
     ```
 
 === "Debian"
 
     ``` bash
-    $ sudo dnf install ncurses-devel ncurses autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
+    $ sudo apt-get install ncurses-devel ncurses autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
     ```
 
 ### Configure and Install
