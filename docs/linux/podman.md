@@ -395,10 +395,57 @@ dnf install -y \
   iptables \
   libassuan-devel \
   libgpg-error-devel \
-  libseccomp-devel \
   libselinux-devel \
   make \
   pkgconfig
+```
+
+##### seccomp
+
+> The libseccomp library provides an easy to use, platform independent, interface to the Linux Kernel's syscall filtering mechanism.
+
+In this part, we will build the last RPM package of `seccomp` for `RISC-V` architecture. You can also use our read-to-go packages and jump to [Install section](#) :
+
+* [libseccomp-2.5.1-3.fc33.riscv64.rpm](https://raw.githubusercontent.com/rv-machines/documentation/main/res/seccomp/rpms/libseccomp-2.5.1-3.fc33.riscv64.rpm)
+* [libseccomp-devel-2.5.1-3.fc33.riscv64.rpm](https://raw.githubusercontent.com/rv-machines/documentation/main/res/seccomp/rpms/libseccomp-devel-2.5.1-3.fc33.riscv64.rpm)
+
+##### Build from source
+
+Install packaging tools :
+
+``` bash
+dnf install -y fedora-packager fedora-review
+usermod -a -G mock riscv
+logout  # Logout to take advantage of group update
+login
+id  # check that you are part of the mock group
+```
+
+Prepare workspace :
+
+``` bash
+mkdir -p ~/packaging/
+cd packaging
+mkdir libseccomp
+cd libseccomp
+
+# Fetch official sources
+wget https://github.com/seccomp/libseccomp/releases/download/v2.5.1/libseccomp-2.5.1.tar.gz
+# Fetch spec file for seccomp
+wget https://raw.githubusercontent.com/rv-machines/documentation/main/res/seccomp/libseccomp.spec
+```
+
+Build the RPMs :
+
+``` bash
+fedpkg --release f33 local
+```
+
+##### Install
+
+``` bash
+cd riscv64  # Only if you built the packages from source
+dnf install libseccomp-2.5.1-3.fc33.riscv64.rpm libseccomp-devel-2.5.1-3.fc33.riscv64.rpm
 ```
 
 ##### crun
@@ -409,7 +456,7 @@ Install dependencies
 
 ``` bash
 dnf install -y make python git gcc automake autoconf libcap-devel \
-    systemd-devel yajl-devel libseccomp-devel \
+    systemd-devel yajl-devel \
     go-md2man glibc-static python3-libmount libtool
 ```
 
@@ -635,3 +682,4 @@ Hello, World! I'm running on linux/riscv64 inside a container!
  * https://github.com/coreos/coreos-assembler
  * https://fedoraproject.org/wiki/Architectures/RISC-V/Installing#Download_using_virt-builder
  * [Linux & Python on RISC-V using QEMU from scratch by Vysakh P Pillai](https://embeddedinn.xyz/articles/tutorial/Linux-Python-on-RISCV-using-QEMU-from-scratch/#running-an-actual-os)
+ * [Creating RPM packages](https://docs.fedoraproject.org/en-US/quick-docs/creating-rpm-packages/)
