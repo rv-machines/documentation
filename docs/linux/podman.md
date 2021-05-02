@@ -395,37 +395,86 @@ dnf install -y \
   iptables \
   libassuan-devel \
   libgpg-error-devel \
-  libseccomp-devel \
   libselinux-devel \
   make \
   pkgconfig
 ```
 
-##### runc
+##### seccomp
+
+> The libseccomp library provides an easy to use, platform independent, interface to the Linux Kernel's syscall filtering mechanism.
+
+In this part, we will build the last RPM package of `seccomp` for `RISC-V` architecture. You can also use our read-to-go packages and jump to [Install section](#install-seccomp) :
+
+* [libseccomp-2.5.1-3.fc33.riscv64.rpm](https://raw.githubusercontent.com/rv-machines/documentation/main/res/seccomp/rpms/libseccomp-2.5.1-3.fc33.riscv64.rpm)
+* [libseccomp-devel-2.5.1-3.fc33.riscv64.rpm](https://raw.githubusercontent.com/rv-machines/documentation/main/res/seccomp/rpms/libseccomp-devel-2.5.1-3.fc33.riscv64.rpm)
+
+##### Build seccomp from source
+
+Install packaging tools :
 
 ``` bash
-git clone https://github.com/opencontainers/runc.git
-cd runc
-git checkout tags/v1.0.0-rc93
-make vendor
-make BUILDTAGS="seccomp"
+dnf install -y fedora-packager fedora-review
+usermod -a -G mock riscv
+logout  # Logout to take advantage of group update
+login
+id  # check that you are part of the mock group
+```
+
+Prepare workspace :
+
+``` bash
+mkdir -p ~/packaging/
+cd packaging
+mkdir libseccomp
+cd libseccomp
+
+# Fetch official sources
+wget https://github.com/seccomp/libseccomp/releases/download/v2.5.1/libseccomp-2.5.1.tar.gz
+# Fetch spec file for seccomp
+# source : https://src.fedoraproject.org/rpms/libseccomp/raw/f33/f/libseccomp.spec
+wget https://raw.githubusercontent.com/rv-machines/documentation/main/res/seccomp/libseccomp.spec
+```
+
+Build the RPMs :
+
+``` bash
+fedpkg --release f33 local
+```
+
+##### Install seccomp
+
+``` bash
+cd riscv64  # Only if you built the packages from source
+dnf install libseccomp-2.5.1-3.fc33.riscv64.rpm libseccomp-devel-2.5.1-3.fc33.riscv64.rpm
+```
+
+##### crun
+
+> A fast and low-memory footprint OCI Container Runtime fully written in C.
+
+Install dependencies
+
+``` bash
+dnf install -y make python git gcc automake autoconf libcap-devel \
+    systemd-devel yajl-devel \
+    go-md2man glibc-static python3-libmount libtool
+```
+
+``` bash
+git clone https://github.com/containers/crun.git
+cd crun
+git checkout 0.19.1
+./autogen.sh
+./configure --enable-shared
+make
+make install
 ```
 
 Verify that it works
 
 ``` bash
-[root@fedora-riscv runc]# ./runc --version
-runc version 1.0.0-rc93
-commit: 12644e614e25b05da6fd08a38ffa0cfe1903fdec
-spec: 1.0.2-dev
-go: go1.16.2
-libseccomp: 2.4.1
-```
-
-Install the binary
-
-``` bash
-make install
+crun --version
 ```
 
 ##### container networking
@@ -520,17 +569,35 @@ mv plugins/bin/* /opt/cni/bin/
 ``` bash
 git clone https://github.com/containers/common.git
 cd common
+git checkout v0.37.1
 make vendor
-GOOS=linux GOARCH=riscv64 go build -tags "seccomp" ./...  # make BUILDTAGS="seccomp"
+GOOS=linux GOARCH=riscv64 go build -tags "seccomp linux systemd" ./...
 make install
+```
+
+Configure `seccomp` :
+
+```
+mkdir -p /usr/share/containers/
+wget https://raw.githubusercontent.com/rv-machines/documentation/main/res/seccomp/seccomp.json
+mv seccomp.json /usr/share/containers/seccomp.json
 ```
 
 ##### Podman
 
+Install a few more packages for podman *rootless* containers :
+
+``` bash
+dnf install -y \
+  container-selinux \
+  slirp4netns \
+  fuse-overlayfs
+```
+
 ``` bash
 git clone https://github.com/containers/podman.git
 cd podman
-git checkout tags/v3.0.1
+git checkout tags/v3.1.2
 make BUILDTAGS="selinux seccomp systemd"
 make install
 ```
@@ -538,10 +605,8 @@ make install
 Verify that podman is correctly set-up
 
 ```
-podman --version
+podman info --debug
 ```
-
-> podman version 3.0.1
 
 ## Build and run a simple image
 
@@ -613,8 +678,49 @@ Query the HTTP server :
 Hello, World! I'm running on linux/riscv64 inside a container!
 ```
 
+## Appendix
+
+### fuse-overlayfs
+
+> Rootless Podman works better if the fuse-overlayfs and slirp4netns packages are installed. The fuse-overlay package provides a userspace overlay storage driver, otherwise users need to use the vfs storage driver, which is diskspace expensive and does not perform well.
+
+``` bash
+podman --storage-driver overlay --storage-opt "overlay.mount_program=/usr/bin/fuse-overlayfs" run -it --rm carlosedp/debian:sid-slim bash
+```
+
+### disable SELinux
+
+``` bash
+podman run --security-opt label=disable -it --rm carlosedp/debian:sid-slim bash
+```
+
+### disable seccomp
+
+``` bash
+podman run --security-opt seccomp=unconfined -it --rm carlosedp/debian:sid-slim bash
+```
+
+### rootless containers
+
+``` bash
+podman unshare cat /proc/self/uid_map
+         0       1000          1
+         1     100000      65536
+```
+
+### debug podman
+
+``` bash
+podman run --log-level debug -it --rm carlosedp/debian:sid-slim bash
+```
+
 ## Further reading and related works
 
- * https://github.com/coreos/coreos-assembler
- * https://fedoraproject.org/wiki/Architectures/RISC-V/Installing#Download_using_virt-builder
+ * [Architectures/RISC-V/Installing](https://fedoraproject.org/wiki/Architectures/RISC-V/Installing)
  * [Linux & Python on RISC-V using QEMU from scratch by Vysakh P Pillai](https://embeddedinn.xyz/articles/tutorial/Linux-Python-on-RISCV-using-QEMU-from-scratch/#running-an-actual-os)
+ * [Creating RPM packages](https://docs.fedoraproject.org/en-US/quick-docs/creating-rpm-packages/)
+ * [podman-run](http://docs.podman.io/en/latest/markdown/podman-run.1.html)
+ * [Rootless containers with Podman: The basics](https://developers.redhat.com/blog/2020/09/25/rootless-containers-with-podman-the-basics/)
+ * [Set up for rootless containers](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_atomic_host/7/html-single/managing_containers/index#set_up_for_rootless_containers)
+ * [Linux Container Configuration](https://github.com/opencontainers/runtime-spec/blob/master/config-linux.md)
+ * [Improving Linux container security with seccomp](https://www.redhat.com/sysadmin/container-security-seccomp)
