@@ -17,3 +17,8 @@ Through this guide, we will build our own `Fedora Core OS` tailored for `RISC-V`
 This guide has been created and inspired by the following articles and blog posts :
 
  * [Build your own distribution based on Fedora CoreOS by Nicolas Massé](https://www.itix.fr/fr/blog/build-your-own-distribution-on-fedora-coreos/)
+
+
+## Further reading and related works
+ * [coreos/coreos-assembler](https://github.com/coreos/coreos-assembler)
+ 

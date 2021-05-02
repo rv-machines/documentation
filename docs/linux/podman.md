@@ -678,9 +678,47 @@ Query the HTTP server :
 Hello, World! I'm running on linux/riscv64 inside a container!
 ```
 
+## Appendix
+
+### fuse-overlayfs
+
+> Rootless Podman works better if the fuse-overlayfs and slirp4netns packages are installed. The fuse-overlay package provides a userspace overlay storage driver, otherwise users need to use the vfs storage driver, which is diskspace expensive and does not perform well.
+
+``` bash
+podman --storage-driver overlay --storage-opt "overlay.mount_program=/usr/bin/fuse-overlayfs" run -it --rm carlosedp/debian:sid-slim bash
+```
+
+### disable SELinux
+
+``` bash
+podman run --security-opt label=disable -it --rm carlosedp/debian:sid-slim bash
+```
+
+### disable seccomp
+
+``` bash
+podman run --security-opt seccomp=unconfined -it --rm carlosedp/debian:sid-slim bash
+```
+
+### rootless containers
+
+``` bash
+podman unshare cat /proc/self/uid_map
+         0       1000          1
+         1     100000      65536
+```
+
+### debug podman
+
+``` bash
+podman run --log-level debug -it --rm carlosedp/debian:sid-slim bash
+```
+
 ## Further reading and related works
 
- * https://github.com/coreos/coreos-assembler
- * https://fedoraproject.org/wiki/Architectures/RISC-V/Installing#Download_using_virt-builder
+ * [Architectures/RISC-V/Installing](https://fedoraproject.org/wiki/Architectures/RISC-V/Installing)
  * [Linux & Python on RISC-V using QEMU from scratch by Vysakh P Pillai](https://embeddedinn.xyz/articles/tutorial/Linux-Python-on-RISCV-using-QEMU-from-scratch/#running-an-actual-os)
  * [Creating RPM packages](https://docs.fedoraproject.org/en-US/quick-docs/creating-rpm-packages/)
+ * [podman-run](http://docs.podman.io/en/latest/markdown/podman-run.1.html)
+ * [Rootless containers with Podman: The basics](https://developers.redhat.com/blog/2020/09/25/rootless-containers-with-podman-the-basics/)
+ * [Set up for rootless containers](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_atomic_host/7/html-single/managing_containers/index#set_up_for_rootless_containers)
