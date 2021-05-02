@@ -17,9 +17,8 @@ On the `RISC-V` virtual machine, install and download the following **packages**
 # Install mock package
 dnf install mock
 
-# Add 'builder' user
-adduser builder
-usermod -a -G mock builder
+# Add 'riscv' to mock group
+usermod -a -G mock riscv
 ```
 
 Fetch the following **resources** :
@@ -31,13 +30,13 @@ mv fedora-rawhide-riscv64.cfg /etc/mock/
 
 # Lorax Kickstart file
 wget https://raw.githubusercontent.com/rv-machines/documentation/main/res/lorax/fedora-docker.ks
-mv fedora-docker.ks /home/builder/
+mv fedora-docker.ks /home/riscv/
 
 # Anaconda RPMs for Fedora 33
 wget http://fedora.riscv.rocks/kojifiles/packages/anaconda/33.25.4/1.0.riscv64.fc33/riscv64/anaconda-core-33.25.4-1.0.riscv64.fc33.riscv64.rpm
 wget http://fedora.riscv.rocks/kojifiles/packages/anaconda/33.25.4/1.0.riscv64.fc33/riscv64/anaconda-tui-33.25.4-1.0.riscv64.fc33.riscv64.rpm
-mv anaconda-core-33.25.4-1.0.riscv64.fc33.riscv64.rpm /home/builder/
-mv anaconda-tui-33.25.4-1.0.riscv64.fc33.riscv64.rpm /home/builder/
+mv anaconda-core-33.25.4-1.0.riscv64.fc33.riscv64.rpm /home/riscv/
+mv anaconda-tui-33.25.4-1.0.riscv64.fc33.riscv64.rpm /home/riscv/
 
 # RISC-V Patch for pyanaconda
 # TODO: upstream this patch
@@ -58,7 +57,7 @@ We will use `mock` for building a `chroot`in order to build a *clean* `rootfs` u
 sudo setenforce 0
 
 # Switch to the build user
-sudo su - builder
+sudo su - riscv
 
 # Go to HOME directory
 cd ~/
@@ -95,7 +94,7 @@ The chroot filesystem can be accessed via : `/var/lib/mock/fedora-rawhide-riscv6
 Go to `results` :
 
 ```
-cd /home/builder/results/try-1/
+cd /home/riscv/results/try-1/
 ```
 
 Unpack the `rootfs` :
