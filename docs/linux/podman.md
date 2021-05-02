@@ -401,31 +401,32 @@ dnf install -y \
   pkgconfig
 ```
 
-##### runc
+##### crun
+
+> A fast and low-memory footprint OCI Container Runtime fully written in C.
+
+Install dependencies
 
 ``` bash
-git clone https://github.com/opencontainers/runc.git
-cd runc
-git checkout tags/v1.0.0-rc93
-make vendor
-make BUILDTAGS="seccomp"
+dnf install -y make python git gcc automake autoconf libcap-devel \
+    systemd-devel yajl-devel libseccomp-devel \
+    go-md2man glibc-static python3-libmount libtool
+```
+
+``` bash
+git clone https://github.com/containers/crun.git
+cd crun
+git checkout 0.19.1
+./autogen.sh
+./configure --enable-shared
+make
+make install
 ```
 
 Verify that it works
 
 ``` bash
-[root@fedora-riscv runc]# ./runc --version
-runc version 1.0.0-rc93
-commit: 12644e614e25b05da6fd08a38ffa0cfe1903fdec
-spec: 1.0.2-dev
-go: go1.16.2
-libseccomp: 2.4.1
-```
-
-Install the binary
-
-``` bash
-make install
+crun --version
 ```
 
 ##### container networking
@@ -520,17 +521,35 @@ mv plugins/bin/* /opt/cni/bin/
 ``` bash
 git clone https://github.com/containers/common.git
 cd common
+git checkout v0.37.1
 make vendor
-GOOS=linux GOARCH=riscv64 go build -tags "seccomp" ./...  # make BUILDTAGS="seccomp"
+GOOS=linux GOARCH=riscv64 go build -tags "seccomp linux systemd" ./...
 make install
+```
+
+Configure `seccomp` :
+
+```
+mkdir -p /usr/share/containers/
+wget https://raw.githubusercontent.com/rv-machines/documentation/main/res/seccomp/seccomp.json
+mv seccomp.json /usr/share/containers/seccomp.json
 ```
 
 ##### Podman
 
+Install a few more packages for podman *rootless* containers :
+
+``` bash
+dnf install -y \
+  container-selinux \
+  slirp4netns \
+  fuse-overlayfs
+```
+
 ``` bash
 git clone https://github.com/containers/podman.git
 cd podman
-git checkout tags/v3.0.1
+git checkout tags/v3.1.2
 make BUILDTAGS="selinux seccomp systemd"
 make install
 ```
@@ -538,10 +557,8 @@ make install
 Verify that podman is correctly set-up
 
 ```
-podman --version
+podman info --debug
 ```
-
-> podman version 3.0.1
 
 ## Build and run a simple image
 
