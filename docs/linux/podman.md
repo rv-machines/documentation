@@ -722,3 +722,5 @@ podman run --log-level debug -it --rm carlosedp/debian:sid-slim bash
  * [podman-run](http://docs.podman.io/en/latest/markdown/podman-run.1.html)
  * [Rootless containers with Podman: The basics](https://developers.redhat.com/blog/2020/09/25/rootless-containers-with-podman-the-basics/)
  * [Set up for rootless containers](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_atomic_host/7/html-single/managing_containers/index#set_up_for_rootless_containers)
+ * [Linux Container Configuration](https://github.com/opencontainers/runtime-spec/blob/master/config-linux.md)
+ * [Improving Linux container security with seccomp](https://www.redhat.com/sysadmin/container-security-seccomp)
