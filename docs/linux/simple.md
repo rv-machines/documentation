@@ -57,6 +57,12 @@ In order to find the **prefix** of your installed toolchain from the command abo
 PREFIX=$(rpm -ql gcc-riscv64-linux-gnu | grep "lib/gcc" | cut -d'/' -f5 | head -n1)
 ```
 
+The following steps require additional tools :
+
+```bash
+sudo dnf install flex bison
+```
+
 Let's use the default configuration by issuing :
 
 ``` bash
@@ -141,13 +147,13 @@ git clone --recursive https://github.com/riscv/riscv-gnu-toolchain
 === "RHEL"
 
     ``` bash
-    $ sudo dnf install ncurses-devel ncurses autoconf automake python3 libmpc-devel mpfr-devel gmp-devel gawk bison flex texinfo patchutils gcc gcc-c++ zlib-devel expat-devel
+    $ sudo dnf install ncurses-devel ncurses autoconf automake python3 libmpc-devel mpfr-devel gmp-devel gawk texinfo patchutils gcc gcc-c++ zlib-devel expat-devel
     ```
 
 === "Debian"
 
     ``` bash
-    $ sudo dnf install ncurses-devel ncurses autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
+    $ sudo apt-get install ncurses-devel ncurses autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
     ```
 
 ### Configure and Install
@@ -157,7 +163,7 @@ The command below will compile the toolchain and install the artifacts in `/opt/
 ``` bash
 cd riscv-gnu-toolchain
 ./configure --prefix=/opt/riscv
-make linux -j $(nproc)
+sudo make linux -j $(nproc)
 ```
 
 If you list `/opt/riscv/bin`, you should see an executable file of the name `riscv64-unknown-linux-gnu-gcc`.
