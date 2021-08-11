@@ -146,12 +146,13 @@ qemu-system-riscv64 \
 
 #### Increase partition size
 
+Check current partition size:
+
 ``` bash
-sudo fdisk /dev/vda
+sudo fdisk -l /dev/vda
 ```
 
 ```
-Command (m for help): p
 Disk /dev/vda: 88.98 GiB, 95537856512 bytes, 186597376 sectors
 Units: sectors of 1 * 512 = 512 bytes
 Sector size (logical/physical): 512 bytes / 512 bytes
@@ -164,67 +165,19 @@ Device     Boot   Start      End  Sectors  Size Id Type
 /dev/vda2       1007616 17960959 16953344  8.1G 83 Linux
 ```
 
-`d`elete partition...
+Resize the partition:
 
-```
-Command (m for help): d
-```
-
-... number `2`
-
-```
-Partition number (1,2, default 2): 2
-
-Partition 2 has been deleted.
-```
-
-`n`ew partition...
-
-```
-Command (m for help): n
-Partition type
-   p   primary (1 primary, 0 extended, 3 free)
-   e   extended (container for logical partitions)
-```
-
-... of type `p`rimary ...
-
-```
-Select (default p): p
-```
-
-... number `2`...
-
-```
-Partition number (2-4, default 2): 2
-```
-
-... First sector at `1007616`...
-
-```
-First sector (2048-186597375, default 2048): 1007616
-```
-
-... Last sector at `186597375` ...
-
-```
-Last sector, +/-sectors or +/-size{K,M,G,T,P} (1007616-186597375, default 186597375): 186597375
-
-Created a new partition 2 of type 'Linux' and of size 88.5 GiB.
-Partition #2 contains a ext4 signature.
-```
-
-Keep signature with `N`
-
-```
-Do you want to remove the signature? [Y]es/[N]o: N
+```bash
+ sudo sh -c "echo ', +' | sfdisk /dev/vda --force -N 2"
 ```
 
 Verify that the `/dev/vda2` has been extended
 
+``` bash
+sudo fdisk -l /dev/vda
 ```
-Command (m for help): p
 
+```
 Disk /dev/vda: 88.98 GiB, 95537856512 bytes, 186597376 sectors
 Units: sectors of 1 * 512 = 512 bytes
 Sector size (logical/physical): 512 bytes / 512 bytes
@@ -237,18 +190,10 @@ Device     Boot   Start       End   Sectors  Size Id Type
 /dev/vda2       1007616 186597375 185589760 88.5G 83 Linux
 ```
 
-Write the changes to the partition table and reboot
+Re-read partition table
 
-```
-Command (m for help): w
-The partition table has been altered.
-Syncing disks.
-```
-
-Restart the instance
-
-```
-reboot
+```bash
+sudo partprobe
 ```
 
 Verify that the partition is now larger
